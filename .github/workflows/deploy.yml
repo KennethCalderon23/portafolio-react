@@ -18,15 +18,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20' # Ajusta a la versión de Node.js que uses en tu proyecto
-          cache: 'npm' # Habilita el caché de npm
-          cache-dependency-path: package-lock.json
+          # No usaremos cache aquí para forzar una instalación limpia cada vez,
+          # o podemos usarla con una estrategia de key más agresiva si el problema persiste.
+          # cache: 'npm'
+          # cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps # Opcional: usa --legacy-peer-deps si tienes problemas de dependencias con npm install
+      - name: Clean npm cache # ¡NUEVO PASO! Limpia la caché de npm
+        run: npm cache clean --force
+
+      - name: Install dependencies # ¡NUEVO COMANDO! Forzar una instalación limpia
+        run: npm install --force --legacy-peer-deps # --force para reinstalar todo, --legacy-peer-deps si es necesario
 
       - name: Run unit tests
-        # Este comando ejecutará Vitest. Asegúrate de que tu package.json tenga
-        # en scripts: "test": "vitest"
         run: npm test
 
       - name: Build project with Vite
@@ -36,4 +39,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # La carpeta de salida de Vite es 'dist'
+          publish_dir: ./dist
