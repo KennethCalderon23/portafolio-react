@@ -1,38 +1,38 @@
-// src/__tests__/portafolio.test.jsx
-import { render, screen } from "@testing-library/react";
-import Datos from "../components/datos";
-import Habilidades from "../components/habilidades";
-import Proyectos from "../components/proyectos";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 
-describe("Validaciones del Portafolio", () => {
-  test("Debe mostrar una fotografía de perfil", () => {
-    render(<Datos />);
-    const img = screen.getByRole("img");
+import App from '../App';
+
+describe('Validaciones Portafolio (Basado en el renderizado de App)', () => {
+
+  beforeEach(() => {
+    render(<App />);
+  });
+
+  test('Datos personales contienen foto, teléfono y nombre completo', () => {
+    // Foto
+    const img = screen.getByRole('img', { name: /foto de kenneth calderón/i });
     expect(img).toBeInTheDocument();
-    expect(img.src).toMatch(/foto1\.jpg/);
-  });
+    expect(img.src).toMatch(/\.(jpg|jpeg|png|gif|svg)$/i);
 
-  test("Debe mostrar el número de teléfono", () => {
-    render(<Datos />);
-    const telefono = screen.getByText(/09/i);
+    // Teléfono
+    const telefono = screen.getByText(/0963304700/);
     expect(telefono).toBeInTheDocument();
+
+    // Nombre completo
+    const nombre = screen.getByTestId('personal-name');
+    expect(nombre).toBeInTheDocument();
+    expect(nombre).toHaveTextContent(/kenneth calderón/i);
   });
 
-  test("Debe mostrar nombres y apellidos", () => {
-    render(<Datos />);
-    expect(screen.getByText(/nombre/i)).toBeInTheDocument();
-    expect(screen.getByText(/apellido/i)).toBeInTheDocument();
+  test('Listado de habilidades tiene al menos 5 elementos', () => {
+    const habilidades = screen.getAllByTestId('habilidad-item');
+    expect(habilidades.length).toBeGreaterThanOrEqual(5);
   });
 
-  test("Debe tener al menos 5 habilidades", () => {
-    render(<Habilidades />);
-    const items = screen.getAllByRole("listitem");
-    expect(items.length).toBeGreaterThanOrEqual(5);
-  });
-
-  test("Debe tener al menos 3 proyectos", () => {
-    render(<Proyectos />);
-    const proyectos = screen.getAllByText(/proyecto/i);
+  test('Listado de proyectos tiene al menos 3 elementos', () => {
+    const proyectos = screen.getAllByTestId('proyecto-item');
     expect(proyectos.length).toBeGreaterThanOrEqual(3);
   });
 });

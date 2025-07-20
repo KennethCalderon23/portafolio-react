@@ -1,13 +1,19 @@
+// src/components/datos.jsx
 import React from 'react';
-import fotoKenneth from '../assets/foto1.jpg'; 
+import { personalData } from '../data/portfolioData'; // Importa los datos centrales
+
 const Datos = () => {
   return (
     <div style={{ textAlign: 'center' }}>
-      <img src={fotoKenneth} alt="Kenneth Calderón" className="avatar" />
-      <h1>Kenneth Calderón</h1>
-      <p>Edad: 21 años</p>
-      <p>Email: calderonisaack@gmail.com</p>
-      <p>Numero: 0963304700</p>
+      <img
+        src={personalData.photo}
+        alt={`Foto de ${personalData.name}`}
+        className="avatar"
+      />
+      <h1 data-testid="personal-name">{personalData.name}</h1> {/* ¡AÑADIDO data-testid! */}
+      <p>Edad: {personalData.age} años</p>
+      <p>Email: {personalData.email}</p>
+      <p>Numero: {personalData.phone}</p>
     </div>
   );
 };
